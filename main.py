@@ -1,20 +1,20 @@
-ESP8266_IoT.initWIFI(SerialPin.P8, SerialPin.P12, BaudRate.BaudRate115200)
-ESP8266_IoT.connectWifi("MC-DT-2.4G", "mcdt1234")
-let Light_level = 0
-if (ESP8266_IoT.wifiState(true)) {
-    basic.showIcon(IconNames.Yes)
-}
-basic.forever(function () {
-    ESP8266_IoT.connectThingSpeak()
-    Light_level = input.lightLevel()
-    ESP8266_IoT.setData(
-    "BXXYBCYE2Y6OFV7Z",
-    Light_level
-    )
-    ESP8266_IoT.uploadData()
-    basic.pause(5000)
-    if (ESP8266_IoT.wifiState(false)) {
-        basic.showIcon(IconNames.Yes)
-    }
-    basic.showString("" + (Environment.octopus_BME280(Environment.BME280_state.BME280_temperature_C)))
-})
+Water_lev = 0
+Tem = 0
+ESP8266_IoT.init_wifi(SerialPin.P8, SerialPin.P12, BaudRate.BAUD_RATE115200)
+ESP8266_IoT.connect_wifi("MC-DT-2.4G", "mcdt1234")
+Light_lev = 0
+if ESP8266_IoT.wifi_state(True):
+    basic.show_icon(IconNames.YES)
+else:
+    basic.show_icon(IconNames.NO)
+
+def on_forever():
+    global Light_lev, Tem, Water_lev
+    ESP8266_IoT.connect_thing_speak()
+    Light_lev = pins.analog_read_pin(AnalogReadWritePin.P1)
+    Tem = Environment.dht11value(Environment.DHT11Type.DHT11_TEMPERATURE_C, DigitalPin.P2)
+    Water_lev = pins.analog_read_pin(AnalogReadWritePin.P10)
+    ESP8266_IoT.set_data("BXXYBCYE2Y6OFV7Z", Light_lev, Tem, Water_lev)
+    ESP8266_IoT.upload_data()
+    basic.pause(15000)
+basic.forever(on_forever)
