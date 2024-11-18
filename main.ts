@@ -20,5 +20,5 @@ basic.forever(function () {
     Water_lev
     )
     ESP8266_IoT.uploadData()
-    basic.pause(5000)
+    basic.pause(15000)
 })
